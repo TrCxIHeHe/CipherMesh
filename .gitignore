@@ -1,0 +1,9 @@
+node_modules
+dist
+__pycache__
+.venv
+*.db
+backend/data/
+*.pem
+*.key
+.env
