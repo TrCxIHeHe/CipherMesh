@@ -1,35 +1,26 @@
 # CipherMesh
 
 > **Cryptography and Network Security Engineering Workbench**  
-> Aligned with the VTU 7th Semester Computer Science Curriculum (BCS703).
 
 CipherMesh is an interactive, engineering-grade workbench designed for exploring classical and modern cryptography, trust infrastructure, authentication protocols, and network/transport security.
 
----
 
-## 🏛️ Syllabus Module Alignment (VTU BCS703)
 
-CipherMesh maps directly to the five modules of the VTU BCS703 curriculum:
-
-- **Module 1: Classical & Symmetric Cryptography**
+- **Key Principles**
   - Substitution & Transposition techniques: Caesar, Monoalphabetic, Playfair, Hill, Polyalphabetic, One-Time Pad (OTP).
   - Steganography (LSB image embedding and detection).
   - Traditional Block Cipher Structure, DES (16-round Feistel network trace, S-boxes, key schedule, avalanche analysis) and Block Cipher Design Principles.
-- **Module 2: Public-Key Cryptography & Randomness**
   - Principles of public-key cryptosystems, RSA algorithm walkthrough (toy mathematical step-by-step vs. real RSA-OAEP).
   - Pseudorandom Number Generation: Linear Congruential Generators (LCG) and Blum Blum Shub (BBS) with cycle/weakness analysis.
   - Key Exchange & Curves: Diffie-Hellman Key Exchange (with MITM simulation), Elliptic Curve arithmetic and ECDH.
-- **Module 3: Hashes, Key Management & PKI Trust Centre**
   - Cryptographic Hash Functions: SHA-256, SHA-512, bit-level avalanche differential analyzer, and file integrity verification.
   - Symmetric and asymmetric key distribution protocol flows.
   - Demonstration Certificate Authority (CA): X.509 certificate issuance, validation, and CRL revocation.
   - Hierarchical Public-Key Infrastructure (PKI) interactive tree.
-- **Module 4: Authentication, Transport Security & Email**
   - Remote User Authentication: Argon2id password hashing and asymmetric challenge-response signatures.
   - Kerberos Protocol Simulator (Authentication Server, Ticket Granting Server, Service Ticket exchange).
   - Transport-Level Security: TLS 1.3 handshake packet inspector and Web Security hardening header analysis.
   - Email Security: OpenPGP and S/MIME signing and encryption workbenches, plus Email Threat analysis (spoofing, replay, MITM).
-- **Module 5: DKIM & IP Security**
   - DomainKeys Identified Mail (DKIM): Canonicalization, body hash, DKIM-Signature generation, and simulated DNS TXT verification.
   - IP Security (IPsec): Security Policy Database (SPD) selector matching, Security Association Database (SAD) with sequence replay protection, ESP packet layout dissection, and Internet Key Exchange (IKEv2) state machine.
 - **Cross-Module Integration: Secure Operations**
