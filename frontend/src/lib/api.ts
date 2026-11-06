@@ -230,6 +230,156 @@ export interface OTPReuseResponse {
   }[]
 }
 
+export interface SBoxBlockTrace {
+  box: number
+  in_6bit: string
+  row: number
+  col: number
+  out_val: number
+  out_4bit: string
+}
+
+export interface DESRoundTrace {
+  round: number
+  key_schedule_round: number
+  left_in: string
+  left_in_hex: string
+  right_in: string
+  right_in_hex: string
+  round_key_bin: string
+  round_key_hex: string
+  key_c_half: string
+  key_d_half: string
+  expansion_bin: string
+  expansion_hex: string
+  xor_bin: string
+  xor_hex: string
+  sbox_blocks: SBoxBlockTrace[]
+  sbox_output_bin: string
+  sbox_output_hex: string
+  p_permutation_bin: string
+  p_permutation_hex: string
+  left_out: string
+  left_out_hex: string
+  right_out: string
+  right_out_hex: string
+  combined_round_hex: string
+}
+
+export interface DESBlockResponse {
+  operation: 'encryption' | 'decryption'
+  input_bin: string
+  input_hex: string
+  key_bin: string
+  key_hex: string
+  ip_bin: string
+  ip_hex: string
+  rounds: DESRoundTrace[]
+  pre_output_bin: string
+  pre_output_hex: string
+  output_bin: string
+  output_hex: string
+}
+
+export interface DESRoundDiff {
+  round: number
+  state1_hex: string
+  state2_hex: string
+  diff_bits: number
+  diff_percent: number
+}
+
+export interface DESAvalancheResponse {
+  original_plaintext_hex: string
+  modified_plaintext_hex: string
+  flipped_bit_position: number
+  key_hex: string
+  original_ciphertext_hex: string
+  modified_ciphertext_hex: string
+  final_differing_bits: number
+  final_differing_percent: number
+  round_progression: DESRoundDiff[]
+}
+
+export interface StegoCapacityResponse {
+  width: number
+  height: number
+  total_pixels: number
+  embeddable_bits: number
+  header_bytes: number
+  max_payload_bytes: number
+  max_payload_characters_utf8: number
+}
+
+export interface StegoEmbedResponse {
+  stego_image_base64: string
+  width: number
+  height: number
+  color_type: string
+  message_length_bytes: number
+  embedded_bits: number
+  capacity_bytes: number
+  crc32: string
+}
+
+export interface StegoExtractResponse {
+  width: number
+  height: number
+  message: string
+  message_length: number
+  crc32: string
+  integrity_verified: boolean
+}
+
+export interface StegoSampleResponse {
+  image_base64: string
+  width: number
+  height: number
+  capacity_bytes: number
+}
+
+export const stegoApi = {
+  getSample: () => request<StegoSampleResponse>('/lab/steganography/sample'),
+  getCapacity: (image_base64: string) =>
+    request<StegoCapacityResponse>('/lab/steganography/capacity', {
+      method: 'POST',
+      body: JSON.stringify({ image_base64 }),
+    }),
+  embed: (image_base64: string, message: string) =>
+    request<StegoEmbedResponse>('/lab/steganography/embed', {
+      method: 'POST',
+      body: JSON.stringify({ image_base64, message }),
+    }),
+  extract: (image_base64: string) =>
+    request<StegoExtractResponse>('/lab/steganography/extract', {
+      method: 'POST',
+      body: JSON.stringify({ image_base64 }),
+    }),
+}
+
+export const desApi = {
+  encrypt: (plaintext_hex: string, key_hex: string) =>
+    request<DESBlockResponse>('/lab/des/encrypt', {
+      method: 'POST',
+      body: JSON.stringify({ plaintext_hex, key_hex, decrypt: false }),
+    }),
+  decrypt: (plaintext_hex: string, key_hex: string) =>
+    request<DESBlockResponse>('/lab/des/decrypt', {
+      method: 'POST',
+      body: JSON.stringify({ plaintext_hex, key_hex, decrypt: true }),
+    }),
+  trace: (plaintext_hex: string, key_hex: string, decrypt: boolean = false) =>
+    request<DESBlockResponse>('/lab/des/trace', {
+      method: 'POST',
+      body: JSON.stringify({ plaintext_hex, key_hex, decrypt }),
+    }),
+  avalanche: (plaintext_hex: string, key_hex: string, flip_bit_index: number = 0) =>
+    request<DESAvalancheResponse>('/lab/des/avalanche', {
+      method: 'POST',
+      body: JSON.stringify({ plaintext_hex, key_hex, flip_bit_index }),
+    }),
+}
+
 export const classicalApi = {
   // Caesar
   encryptCaesar: (text: string, shift: number) =>

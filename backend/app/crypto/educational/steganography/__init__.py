@@ -1,0 +1,2 @@
+"""Educational Steganography Package."""
+
