@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     VERSION: str = "0.1.0"
     ENVIRONMENT: str = "development"
     API_V1_STR: str = "/api/v1"
-    
+
     # CORS Origins allowed to access API
     CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost:5173",
@@ -19,13 +19,19 @@ class Settings(BaseSettings):
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
-        if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",") if i.strip()]
-        elif isinstance(v, list):
-            return v
+        if isinstance(v, str):
+            value = v.strip()
+            if not value:
+                return []
+            if value.startswith("["):
+                return [item.strip() for item in value.strip("[]").split(",") if item.strip()]
+            return [item.strip() for item in value.split(",") if item.strip()]
+        if isinstance(v, list):
+            return [str(item).strip() for item in v if str(item).strip()]
         return []
 
-    # SQLite Database configuration
+    # Default to SQLite for local development. Production deployments should set
+    # DATABASE_URL to a PostgreSQL connection string supplied via Vercel env vars.
     DATABASE_URL: str = "sqlite:///./ciphermesh.db"
 
     model_config = SettingsConfigDict(
@@ -34,6 +40,19 @@ class Settings(BaseSettings):
         case_sensitive=True,
         extra="ignore",
     )
+
+    @property
+    def is_sqlite(self) -> bool:
+        return self.DATABASE_URL.startswith("sqlite")
+
+    @property
+    def is_postgres(self) -> bool:
+        return self.DATABASE_URL.startswith((
+            "postgres://",
+            "postgresql://",
+            "postgresql+psycopg://",
+            "postgresql+psycopg2://",
+        ))
 
 
 settings = Settings()

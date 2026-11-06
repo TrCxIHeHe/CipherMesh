@@ -95,6 +95,43 @@ CipherMesh is an interactive, engineering-grade workbench designed for exploring
 
 ---
 
+## ☁️ Vercel Services Deployment
+
+CipherMesh is configured for a single-project Vercel deployment using the current `services` model.
+
+- Frontend service: `frontend/` with the Vite framework.
+- Backend service: `backend/` with the FastAPI framework and `app.main:app`.
+- Public routing: `/api/*` is routed to the backend service and every other path routes to the frontend app.
+
+The root `vercel.json` file is defined at the repository root and keeps the same public domain for both the frontend and backend.
+
+### Production database setup
+
+- Local development continues to use SQLite by default.
+- Production must supply `DATABASE_URL` as a PostgreSQL connection string (for example, a Neon PostgreSQL database in Vercel).
+- Vercel environment variables should be set for both the backend service and any build/runtime environment where the app is executed.
+
+Example:
+
+```bash
+DATABASE_URL=postgresql+psycopg://user:password@host:5432/ciphermesh
+ENVIRONMENT=production
+CORS_ORIGINS=https://your-project.vercel.app
+```
+
+### Initial Alembic migration
+
+Apply the initial schema migration against the configured database:
+
+```bash
+cd backend
+python -m alembic upgrade head
+```
+
+If you are using a PostgreSQL database in production, set `DATABASE_URL` before running the migration. Local SQLite development can continue without a hosted database.
+
+---
+
 ## 🧪 Testing & Verification
 
 ### Backend Tests

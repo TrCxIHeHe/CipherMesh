@@ -1,16 +1,16 @@
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.api.router import api_router
 from app.core.config import settings
-from app.db.base import Base
-from app.db.session import engine
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize SQLite schema tables on startup
-    Base.metadata.create_all(bind=engine)
+    # Database schema management is intentionally handled with explicit migrations
+    # rather than auto-creating tables on every serverless function invocation.
     yield
 
 
